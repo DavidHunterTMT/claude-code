@@ -2,9 +2,11 @@ import base64
 import io
 from collections import defaultdict
 
+import xlsxwriter
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.misc import format_date, xlsxwriter
+from odoo.tools import format_date
 
 DATE_BASIS = [
     ('date_to', 'Pay Period End Date'),
