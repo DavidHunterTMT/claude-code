@@ -39,7 +39,7 @@ def build_summary_rows(employees, rules, amounts, hide_zero_lines=False):
         })
 
     section_lines = defaultdict(list)
-    for key, label, section, sequence in sorted(rules, key=lambda r: (r[3], r[1])):
+    for key, label, section, _sequence in sorted(rules, key=lambda r: (r[3], r[1])):
         values = [amounts.get((emp_id, key), 0.0) for emp_id in employee_ids]
         if hide_zero_lines and not any(round(v, 2) for v in values):
             continue
