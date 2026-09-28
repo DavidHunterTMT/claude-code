@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payroll_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="company" t-value="o.company_id"/>
+                <t t-set="data" t-value="o._get_report_data()"/>
+                <t t-set="page_count" t-value="len(data['column_pages'])"/>
+                <t t-call="web.internal_layout">
+                    <t t-foreach="data['column_pages']" t-as="columns">
+                        <div class="page" t-attf-style="#{'page-break-before: always;' if not columns_first else ''}">
+                            <style>
+                                .o_payroll_summary { font-size: 11px; width: 100%; border-collapse: collapse; }
+                                .o_payroll_summary th { text-align: right; vertical-align: bottom;
+                                    border-bottom: 1px solid #000; padding: 2px 4px; font-weight: bold; }
+                                .o_payroll_summary td { padding: 1px 4px; white-space: nowrap; }
+                                .o_payroll_summary td.o_amount { text-align: right; }
+                                .o_payroll_summary tr.o_title td,
+                                .o_payroll_summary tr.o_subtotal td { font-weight: bold; }
+                                .o_payroll_summary tr.o_subtotal td.o_amount { border-top: 1px solid #000; }
+                                .o_payroll_summary td.o_total_col { font-weight: bold; }
+                                .o_payroll_summary tr.o_blank td { height: 10px; }
+                            </style>
+                            <h4 class="mb-0" t-out="o._get_title()"/>
+                            <div class="mb-2">
+                                <span t-out="o._get_period_label()"/>
+                                (<span t-out="data['date_basis_label']"/>)
+                                <t t-if="page_count &gt; 1">
+                                    &#8212; employees page <t t-out="columns_index + 1"/> of <t t-out="page_count"/>
+                                </t>
+                            </div>
+                            <table class="o_payroll_summary">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;"/>
+                                        <t t-foreach="columns" t-as="col">
+                                            <th t-out="data['employees'][col]"/>
+                                        </t>
+                                        <th t-if="columns_last">TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="data['rows']" t-as="row">
+                                        <tr t-attf-class="o_#{row['type']}">
+                                            <td t-attf-style="padding-left: #{4 + row['level'] * 14}px;" t-out="row['label']"/>
+                                            <t t-foreach="columns" t-as="col">
+                                                <td class="o_amount">
+                                                    <t t-if="row['values'] is not None" t-out="o._format_amount(row['values'][col])"/>
+                                                </td>
+                                            </t>
+                                            <td t-if="columns_last" class="o_amount o_total_col">
+                                                <t t-if="row['values'] is not None" t-out="o._format_amount(row['total'])"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
