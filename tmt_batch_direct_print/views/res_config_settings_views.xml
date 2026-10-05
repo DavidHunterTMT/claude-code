@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.tmt.batch.direct.print</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='shipping_setting_container']" position="after">
+                <block title="Batch Shipment Printing" name="tmt_batch_direct_print_container">
+                    <setting id="tmt_batch_slip_printer" string="Delivery Slip Printer"
+                             help="The four delivery slip buttons on a shipping batch print here. Leave empty to download the PDF instead.">
+                        <field name="tmt_batch_slip_printer_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting id="tmt_batch_label_printer" string="Shipping Label Printer"
+                             help="The Print Label button on a shipping batch prints here. Leave empty to download the label instead.">
+                        <field name="tmt_batch_label_printer_id" options="{'no_create': True}"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

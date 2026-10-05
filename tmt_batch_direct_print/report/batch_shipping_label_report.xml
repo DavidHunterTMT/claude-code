@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Shipping labels of a batch, sent as one print job. Nothing is rendered
+        from a template: ir.actions.report returns the label files the carrier
+        attached to the batch (see models/ir_actions_report.py). There is one
+        report per label format because IoT prints PDF and raw ZPL differently.
+    -->
+    <record id="action_report_batch_shipping_label_pdf" model="ir.actions.report">
+        <field name="name">Batch Shipping Label (PDF)</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tmt_batch_direct_print.report_batch_shipping_label_pdf</field>
+        <field name="print_report_name">'Labels - %s' % object.name</field>
+    </record>
+
+    <record id="action_report_batch_shipping_label_zpl" model="ir.actions.report">
+        <field name="name">Batch Shipping Label (ZPL)</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">tmt_batch_direct_print.report_batch_shipping_label_zpl</field>
+        <field name="print_report_name">'Labels - %s' % object.name</field>
+    </record>
+
+</odoo>
