@@ -38,16 +38,25 @@ class StockPicking(models.Model):
         return pdf_report | zpl_report
 
     @api.model
+    def _tmt_delivery_iot_label_report(self):
+        """delivery_iot's Print > Shipping Labels report, if that module is installed.
+
+        Looked up by report_name: its XML id names the QWeb template (an
+        ir.ui.view), not the report action.
+        """
+        return self.env['ir.actions.report'].search([
+            ('model', '=', 'stock.picking'),
+            ('report_name', '=', 'delivery_iot.report_shipping_labels'),
+        ])
+
+    @api.model
     def _tmt_set_print_menu_domains(self):
         """Hide the slip and shipping-label reports from Print on done deliveries.
 
         Called on install/upgrade (data/gear_menu_data.xml) and when the
         printer settings are saved, so a report added later is covered too.
         """
-        reports = self.env['stock.picking.batch']._tmt_slip_reports()
-        shipping_labels = self.env.ref('delivery_iot.report_shipping_labels', raise_if_not_found=False)
-        if shipping_labels:
-            reports |= shipping_labels
+        reports = self.env['stock.picking.batch']._tmt_slip_reports() | self._tmt_delivery_iot_label_report()
         reports.filtered(lambda r: r.domain != BUTTON_REPORTS_MENU_DOMAIN).domain = BUTTON_REPORTS_MENU_DOMAIN
 
     def _tmt_print_delivery_slip(self, report_key):

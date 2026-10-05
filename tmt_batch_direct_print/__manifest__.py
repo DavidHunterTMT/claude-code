@@ -1,6 +1,6 @@
 {
     'name': 'Batch Shipment Direct Printing',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.2.1',
     'category': 'Inventory/Delivery',
     'summary': 'Print batch shipment delivery slips and shipping labels straight to IoT printers',
     'description': """
