@@ -1,6 +1,6 @@
 {
     'name': 'Batch Shipment Direct Printing',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Inventory/Delivery',
     'summary': 'Print batch shipment delivery slips and shipping labels straight to IoT printers',
     'description': """
@@ -17,14 +17,22 @@ print straight to a printer through Odoo IoT instead of downloading a PDF:
 Pick both printers once under *Inventory > Configuration > Settings >
 Batch Shipment Printing*. A report with no printer set falls back to the
 normal download.
+
+Every PDF sent to an IoT printer prints one-sided. The Windows IoT driver
+otherwise forces two-sided printing on printers that have a duplex unit.
 """,
     'author': 'Tennessee Machine Tool',
     'license': 'LGPL-3',
-    'depends': ['iot', 'dip_ups_batch_delivery'],
+    'depends': ['iot', 'iot_base', 'dip_ups_batch_delivery'],
     'data': [
         'report/batch_shipping_label_report.xml',
         'views/res_config_settings_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'tmt_batch_direct_print/static/src/iot_one_sided.js',
+        ],
+    },
     'installable': True,
     'application': False,
 }

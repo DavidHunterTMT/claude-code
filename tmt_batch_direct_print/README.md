@@ -36,5 +36,14 @@ If no printer is set for a button, it keeps its old download behavior.
   so a change made under *Settings > Technical > Reports > IoT* shows up there
   too.
 
+## One-sided printing
+
+The Windows IoT software prints every PDF two-sided on a printer with a duplex
+unit, unless the print job says otherwise, and Odoo 19 never does. This add-on
+adds `duplex: false` to every print job sent to an IoT Box, both the ones the
+browser sends directly and the ones relayed through the Odoo server, so slips
+always print one-sided. Printer and Windows duplex settings have no effect on
+this.
+
 For a thermal label printer (Zebra and similar), setting the UPS carrier's label
 file type to **ZPL** gives faster, sharper labels than PDF.
