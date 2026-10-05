@@ -1,6 +1,6 @@
 {
     'name': 'Batch Shipment Direct Printing',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'category': 'Inventory/Delivery',
     'summary': 'Print batch shipment delivery slips and shipping labels straight to IoT printers',
     'description': """
@@ -14,6 +14,11 @@ print straight to a printer through Odoo IoT instead of downloading a PDF:
 * Print Label prints the batch's UPS labels (PDF or ZPL) to the
   **Shipping Label Printer**.
 
+Done delivery orders get the same five buttons, and those reports leave Print
+in the gear menu there. The standard Delivery Slip
+button moves to Print in the gear menu, and on batches Print and Print Labels
+move to the gear menu.
+
 Pick both printers once under *Inventory > Configuration > Settings >
 Batch Shipment Printing*. A report with no printer set falls back to the
 normal download.
@@ -26,7 +31,10 @@ otherwise forces two-sided printing on printers that have a duplex unit.
     'depends': ['iot', 'iot_base', 'dip_ups_batch_delivery'],
     'data': [
         'report/batch_shipping_label_report.xml',
+        'data/gear_menu_data.xml',
         'views/res_config_settings_views.xml',
+        'views/stock_picking_views.xml',
+        'views/stock_picking_batch_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

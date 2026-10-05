@@ -5,6 +5,16 @@ from odoo.exceptions import UserError
 SLIP_REPORT_KEYS = ('standard', 'vending', 'sw_standard', 'sw_vending')
 
 
+def split_labels(labels):
+    """Split label attachments into (PDF, ZPL), oldest first."""
+    labels = labels.sorted('id')
+    pdf = labels.filtered(
+        lambda a: a.mimetype == 'application/pdf' or (a.name or '').lower().endswith('.pdf')
+    )
+    zpl = (labels - pdf).filtered(lambda a: (a.name or '').lower().endswith('.zpl'))
+    return pdf, zpl
+
+
 class StockPickingBatch(models.Model):
     _inherit = 'stock.picking.batch'
 
@@ -28,12 +38,7 @@ class StockPickingBatch(models.Model):
     def _tmt_label_attachments(self):
         """Split this batch's shipping labels into (PDF, ZPL) attachments."""
         self.ensure_one()
-        labels = self.label_attachment_ids.sorted('id')
-        pdf = labels.filtered(
-            lambda a: a.mimetype == 'application/pdf' or (a.name or '').lower().endswith('.pdf')
-        )
-        zpl = (labels - pdf).filtered(lambda a: (a.name or '').lower().endswith('.zpl'))
-        return pdf, zpl
+        return split_labels(self.label_attachment_ids)
 
     def action_print_labels(self):
         """Send the labels to the label printer when one is configured.

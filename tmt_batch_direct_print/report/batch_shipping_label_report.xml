@@ -23,4 +23,21 @@
         <field name="print_report_name">'Labels - %s' % object.name</field>
     </record>
 
+    <!-- The same, for the UPS label of a single delivery order. -->
+    <record id="action_report_picking_shipping_label_pdf" model="ir.actions.report">
+        <field name="name">Delivery Shipping Label (PDF)</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tmt_batch_direct_print.report_picking_shipping_label_pdf</field>
+        <field name="print_report_name">'Label - %s' % object.name</field>
+    </record>
+
+    <record id="action_report_picking_shipping_label_zpl" model="ir.actions.report">
+        <field name="name">Delivery Shipping Label (ZPL)</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">tmt_batch_direct_print.report_picking_shipping_label_zpl</field>
+        <field name="print_report_name">'Label - %s' % object.name</field>
+    </record>
+
 </odoo>

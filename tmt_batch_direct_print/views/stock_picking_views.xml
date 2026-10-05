@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Delivery orders: the shipping-batch print buttons, once the delivery is done. -->
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.tmt.batch.direct.print</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <!-- The standard Delivery Slip moves to Print in the gear menu (data/gear_menu_data.xml). -->
+            <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header/field[@name='state']" position="before">
+                <field name="tmt_label_count" invisible="1"/>
+                <button name="action_tmt_print_label" string="Print Label" type="object" class="btn-secondary" icon="fa-print"
+                        invisible="picking_type_code != 'outgoing' or state != 'done' or not tmt_label_count"/>
+                <button name="action_tmt_print_standard_delivery_slip" string="Standard Delivery Slip" type="object" class="btn-secondary" icon="fa-print"
+                        invisible="picking_type_code != 'outgoing' or state != 'done'"/>
+                <button name="action_tmt_print_vending_delivery_slip" string="Vending Delivery Slip" type="object" class="btn-secondary" icon="fa-print"
+                        invisible="picking_type_code != 'outgoing' or state != 'done'"/>
+                <button name="action_tmt_print_sw_standard_delivery_slip" string="S&amp;W Standard Delivery Slip" type="object" class="btn-secondary" icon="fa-print"
+                        invisible="picking_type_code != 'outgoing' or state != 'done'"/>
+                <button name="action_tmt_print_sw_vending_delivery_slip" string="S&amp;W Vending Delivery Slip" type="object" class="btn-secondary" icon="fa-print"
+                        invisible="picking_type_code != 'outgoing' or state != 'done'"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

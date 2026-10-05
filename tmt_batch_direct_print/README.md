@@ -13,6 +13,16 @@ straight to a printer through Odoo IoT, with no download or preview:
 
 If no printer is set for a button, it keeps its old download behavior.
 
+Delivery orders get the same five buttons once they are **Done**. Print Label
+there prints the UPS label from the delivery's latest shipment. On done
+delivery orders the four slips and Shipping Labels leave Print in the gear
+menu; every other transfer keeps them there.
+
+Buttons moved into the gear menu:
+
+* Deliveries: the standard **Delivery Slip** (Print in the gear menu).
+* Batches: **Print** (Print > Batch Transfer) and **Print Labels** (Actions).
+
 ## One-time setup
 
 1. On the shipping station PC (Windows, left on, both printers installed in

@@ -2,8 +2,14 @@ from odoo import _, models
 from odoo.exceptions import UserError
 from odoo.tools.pdf import merge_pdf
 
-LABEL_PDF_REPORT = 'tmt_batch_direct_print.report_batch_shipping_label_pdf'
-LABEL_ZPL_REPORT = 'tmt_batch_direct_print.report_batch_shipping_label_zpl'
+# report_name -> label format. Each report's model (stock.picking.batch or
+# stock.picking) implements _tmt_label_attachments().
+LABEL_REPORTS = {
+    'tmt_batch_direct_print.report_batch_shipping_label_pdf': 'pdf',
+    'tmt_batch_direct_print.report_batch_shipping_label_zpl': 'zpl',
+    'tmt_batch_direct_print.report_picking_shipping_label_pdf': 'pdf',
+    'tmt_batch_direct_print.report_picking_shipping_label_zpl': 'zpl',
+}
 
 
 class IrActionsReport(models.Model):
@@ -37,24 +43,26 @@ class IrActionsReport(models.Model):
 
     # Label reports: hand back the carrier's label files instead of rendering.
 
-    def _tmt_batch_label_attachments(self, res_ids, label_format):
-        batches = self.env['stock.picking.batch'].browse(res_ids)
+    def _tmt_label_attachments(self, res_ids):
+        label_format = LABEL_REPORTS[self.report_name]
         labels = self.env['ir.attachment']
-        for batch in batches:
-            pdf, zpl = batch._tmt_label_attachments()
+        for record in self.env[self.model].browse(res_ids):
+            pdf, zpl = record._tmt_label_attachments()
             labels |= pdf if label_format == 'pdf' else zpl
         if not labels:
-            raise UserError(_("No %s shipping labels are attached to this batch.", label_format.upper()))
+            raise UserError(_("No %s shipping labels are attached to this record.", label_format.upper()))
         return labels
 
     def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
-        if self._get_report(report_ref).report_name == LABEL_PDF_REPORT:
-            labels = self._tmt_batch_label_attachments(res_ids, 'pdf')
+        report = self._get_report(report_ref)
+        if report.report_name in LABEL_REPORTS:
+            labels = report._tmt_label_attachments(res_ids)
             return merge_pdf([label.raw for label in labels]), 'pdf'
         return super()._render_qweb_pdf(report_ref, res_ids=res_ids, data=data)
 
     def _render_qweb_text(self, report_ref, docids, data=None):
-        if self._get_report(report_ref).report_name == LABEL_ZPL_REPORT:
-            labels = self._tmt_batch_label_attachments(docids, 'zpl')
+        report = self._get_report(report_ref)
+        if report.report_name in LABEL_REPORTS:
+            labels = report._tmt_label_attachments(docids)
             return b'\n'.join(label.raw for label in labels), 'text'
         return super()._render_qweb_text(report_ref, docids, data=data)
