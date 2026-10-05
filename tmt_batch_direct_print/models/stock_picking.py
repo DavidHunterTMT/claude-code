@@ -85,4 +85,11 @@ class StockPicking(models.Model):
         if pdf and zpl:
             raise UserError(_("This delivery has both PDF and ZPL labels; print them from the chatter."))
         pdf_report, zpl_report = self._tmt_label_reports()
-        return (pdf_report if pdf else zpl_report).report_action(self)
+        report = pdf_report if pdf else zpl_report
+        if not report._tmt_get_printer():
+            # Without a printer the report opens a preview. Reuse the batch
+            # label printer, so a fresh install needs no extra settings save.
+            batch_printer = self.env['stock.picking.batch']._tmt_label_reports()[:1]._tmt_get_printer()
+            if batch_printer:
+                report.sudo()._tmt_set_printer(batch_printer)
+        return report.report_action(self)
